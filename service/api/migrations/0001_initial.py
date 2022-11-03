@@ -7,24 +7,26 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Apartment',
+            name="Apartment",
             fields=[
-                ('id', models.CharField(max_length=10, primary_key=True, serialize=False)),
-                ('city', models.CharField(max_length=128)),
-                ('street', models.CharField(max_length=128)),
-                ('street_number', models.CharField(max_length=16)),
-                ('rooms', models.IntegerField()),
-                ('floor', models.IntegerField()),
-                ('area', models.IntegerField()),
-                ('rent', models.IntegerField()),
-                ('latitude', models.DecimalField(max_digits=10, decimal_places=7)),
-                ('longitude', models.DecimalField(max_digits=10, decimal_places=7)),
-                ('description', models.TextField())
+                (
+                    "id",
+                    models.CharField(max_length=10, primary_key=True, serialize=False),
+                ),
+                ("city", models.CharField(max_length=128)),
+                ("street", models.CharField(max_length=128)),
+                ("street_number", models.CharField(max_length=16)),
+                ("rooms", models.IntegerField()),
+                ("floor", models.IntegerField()),
+                ("area", models.IntegerField()),
+                ("rent", models.IntegerField()),
+                ("latitude", models.DecimalField(max_digits=10, decimal_places=7)),
+                ("longitude", models.DecimalField(max_digits=10, decimal_places=7)),
+                ("description", models.TextField()),
             ],
         ),
     ]
