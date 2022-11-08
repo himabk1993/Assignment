@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.test import Client, TestCase
 from django.urls import reverse
-from rest_framework import status
+from http import HTTPStatus
 
 from api.models import RentalAgreement, User
 from api.serializers import RentalAgreementSerializer
@@ -32,7 +32,7 @@ class RentalAgreementTest(TestCase):
         building_payload = {
             "name": "Test Building",
             "street": "Elsa",
-            "user_id": "1",
+            "user_id": 1,
             "city": "Kannur",
             "number": 90,
             "street_number": "57",
@@ -70,7 +70,7 @@ class RentalAgreementTest(TestCase):
             data=self.payload,
             content_type="application/json",
         )
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, HTTPStatus.CREATED)
 
     def test_get_all_buildings(self):
         response = client.post(
@@ -81,7 +81,7 @@ class RentalAgreementTest(TestCase):
         response = client.get(reverse("rental_agreement"))
         rental_agreement = RentalAgreement.objects.all()
         RentalAgreementSerializer().dump(rental_agreement, many=True)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_get_one_apartment(self):
         response = client.post(
@@ -96,7 +96,7 @@ class RentalAgreementTest(TestCase):
         rental_agreement = RentalAgreement.objects.get(id=rental_agreement_id)
         serialized_data = RentalAgreementSerializer().dump(rental_agreement)
         self.assertEqual(response.json(), serialized_data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_update_apartment(self):
         response = client.post(
@@ -117,7 +117,7 @@ class RentalAgreementTest(TestCase):
         self.assertEqual(
             response.json()["is_renewable"], serialized_data["is_renewable"]
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_delete_apartment(self):
         response = client.post(
@@ -131,4 +131,4 @@ class RentalAgreementTest(TestCase):
                 "rental_agreement_details", kwargs={"pk": str(rental_agreement["id"])}
             )
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
