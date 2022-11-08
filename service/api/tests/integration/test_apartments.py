@@ -1,8 +1,8 @@
 from datetime import datetime
 
+from http import HTTPStatus
 from django.test import Client, TestCase
 from django.urls import reverse
-from rest_framework import status
 
 from api.models import Apartment, User
 from api.serializers import ApartmentSerializer
@@ -25,7 +25,7 @@ class ApartmentTest(TestCase):
         building_payload = {
             "name": "Test Building",
             "street": "Elsa",
-            "user_id": "1",
+            "user_id": 1,
             "city": "Kannur",
             "number": 90,
             "street_number": "57",
@@ -51,7 +51,7 @@ class ApartmentTest(TestCase):
         response = client.post(
             reverse("apartment"), data=self.payload, content_type="application/json"
         )
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, HTTPStatus.CREATED)
 
     def test_get_all_buildings(self):
         response = client.post(
@@ -60,7 +60,7 @@ class ApartmentTest(TestCase):
         response = client.get(reverse("apartment"))
         apartments = Apartment.objects.all()
         ApartmentSerializer().dump(apartments, many=True)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_get_one_apartment(self):
         response = client.post(
@@ -71,7 +71,7 @@ class ApartmentTest(TestCase):
         aprtment = Apartment.objects.get(id=aprtment_id)
         serialized_data = ApartmentSerializer().dump(aprtment)
         self.assertEqual(response.json(), serialized_data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_update_apartment(self):
         response = client.post(
@@ -88,7 +88,7 @@ class ApartmentTest(TestCase):
         apartment = Apartment.objects.get(id=apartment_id)
         serialized_data = ApartmentSerializer().dump(apartment)
         self.assertEqual(response.json()["rooms"], serialized_data["rooms"])
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_delete_apartment(self):
         response = client.post(
@@ -98,4 +98,4 @@ class ApartmentTest(TestCase):
         response = client.delete(
             reverse("apartment_details", kwargs={"pk": str(apartment["id"])})
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, HTTPStatus.OK)

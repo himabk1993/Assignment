@@ -1,8 +1,8 @@
 from datetime import datetime
 
+from http import HTTPStatus
 from django.test import Client, TestCase
 from django.urls import reverse
-from rest_framework import status
 
 from api.models import Building, User
 from api.serializers import BuildingSerializer
@@ -15,7 +15,7 @@ class BuildingTest(TestCase):
         self.payload = {
             "name": "Test Building",
             "street": "Elsa",
-            "user_id": "1",
+            "user_id": 1,
             "city": "Kannur",
             "number": 90,
             "street_number": "57",
@@ -36,7 +36,7 @@ class BuildingTest(TestCase):
         response = client.post(
             reverse("building"), data=self.payload, content_type="application/json"
         )
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, HTTPStatus.CREATED)
 
     def test_get_all_buildings(self):
         response = client.post(
@@ -46,7 +46,7 @@ class BuildingTest(TestCase):
         buildings = Building.objects.all()
         serialized_data = BuildingSerializer().dump(buildings, many=True)
         self.assertEqual(response.json(), serialized_data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_get_one_building(self):
         response = client.post(
@@ -57,7 +57,7 @@ class BuildingTest(TestCase):
         building = Building.objects.get(id=building_id)
         serialized_data = BuildingSerializer().dump(building)
         self.assertEqual(response.json(), serialized_data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_update_building(self):
         response = client.post(
@@ -75,7 +75,7 @@ class BuildingTest(TestCase):
         serialized_data = BuildingSerializer().dump(building)
 
         self.assertEqual(response.json()["name"], serialized_data["name"])
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_delete_building(self):
         response = client.post(
@@ -86,8 +86,8 @@ class BuildingTest(TestCase):
             reverse("building_details", kwargs={"pk": str(building["id"])})
         )
 
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_delete_not_existing_building(self):
         response = client.delete(reverse("building_details", kwargs={"pk": "6665545"}))
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
