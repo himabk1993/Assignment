@@ -40,8 +40,8 @@ class ApartmentTest(TestCase):
         }
 
         User.objects.create(**user_payload)
-        self.payload["user_id"] = str(User.objects.all()[0].id)
-        building_payload["user_id"] = str(User.objects.all()[0].id)
+        self.payload["user_id"] = int(User.objects.all()[0].id)
+        building_payload["user_id"] = int(User.objects.all()[0].id)
         response = client.post(
             reverse("building"), data=building_payload, content_type="application/json"
         )
