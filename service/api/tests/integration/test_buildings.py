@@ -30,7 +30,7 @@ class BuildingTest(TestCase):
         }
 
         User.objects.create(**user_payload)
-        self.payload["user_id"] = str(User.objects.all()[0].id)
+        self.payload["user_id"] = int(User.objects.all()[0].id)
 
     def test_post_building_with_valid_user(self):
         response = client.post(
