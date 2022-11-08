@@ -1,20 +1,20 @@
 import json
 import logging
 from datetime import datetime
+from http import HTTPStatus
 
 from django.http import JsonResponse
 from django.views import View
-from http import HTTPStatus
 
 from .models import Apartment, Building, RentalAgreement
-from .schemas import (CreateApartment, CreateBuilding, CreateRentalAgreement,
-                      UpdateApartment, UpdateBuilding, UpdateRentalAgreement)
+from .schemas import (CreateApartment, CreateRentalAgreement, UpdateApartment,
+                      UpdateBuilding, UpdateRentalAgreement)
 from .serializers import (ApartmentSerializer, BuildingSerializer,
                           RentalAgreementSerializer)
 from .validators import BuildingValidator
 
-
 logger = logging.getLogger(__name__)
+
 
 class ApartmentsView(View):
     def get(self, request):
@@ -73,7 +73,9 @@ class ApartmentsDetail(View):
         try:
             apartment = Apartment.objects.get(id=pk)
             apartment.delete()
-            return JsonResponse({"message": "The apartment is deleted!"}, status=HTTPStatus.OK)
+            return JsonResponse(
+                {"message": "The apartment is deleted!"}, status=HTTPStatus.OK
+            )
         except Exception as e:
             logger.error("Couldn't delete apartment due to %s" % str(e))
             return JsonResponse(
@@ -143,7 +145,9 @@ class BuildingsDetailView(View):
             building = Building.objects.get(id=pk)
             building.deleted_at = datetime.now()
             building.save()
-            return JsonResponse({"message": "The building is deleted"}, status=HTTPStatus.OK)
+            return JsonResponse(
+                {"message": "The building is deleted"}, status=HTTPStatus.OK
+            )
         except Exception as e:
             logger.error("Couldn't delete the building due to %s" % str(e))
             return JsonResponse(

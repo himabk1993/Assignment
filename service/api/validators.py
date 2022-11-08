@@ -3,14 +3,14 @@ import uuid
 
 class BuildingValidator:
     def __init__(self, **kwargs):
-        self.id: str = kwargs.get('id')
-        self.name: str = kwargs.get('name')
-        self.number: int = kwargs.get('number')
-        self.association_name: str = kwargs.get('association_name')
-        self.city: str = kwargs.get('city')
-        self.street: str = kwargs.get('street')
-        self.street_number:str = kwargs.get('street_number')
-        self.user_id:int = kwargs.get("user_id")
+        self.id: str = kwargs.get("id")
+        self.name: str = kwargs.get("name")
+        self.number: int = kwargs.get("number")
+        self.association_name: str = kwargs.get("association_name")
+        self.city: str = kwargs.get("city")
+        self.street: str = kwargs.get("street")
+        self.street_number: str = kwargs.get("street_number")
+        self.user_id: int = kwargs.get("user_id")
 
     @property
     def id(self):
@@ -111,5 +111,5 @@ class BuildingValidator:
             "city": self.city,
             "street": self.street,
             "street_number": self.street_number,
-            "user_id": self.user_id
+            "user_id": self.user_id,
         }

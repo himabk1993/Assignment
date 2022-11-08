@@ -1,11 +1,10 @@
 from datetime import datetime
-
 from http import HTTPStatus
-from django.test import Client, TestCase
-from django.urls import reverse
 
 from api.models import Building, User
 from api.serializers import BuildingSerializer
+from django.test import Client, TestCase
+from django.urls import reverse
 
 client = Client(raise_request_exception=False)
 
