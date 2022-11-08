@@ -1,11 +1,10 @@
 from datetime import datetime
-
-from django.test import Client, TestCase
-from django.urls import reverse
 from http import HTTPStatus
 
 from api.models import RentalAgreement, User
 from api.serializers import RentalAgreementSerializer
+from django.test import Client, TestCase
+from django.urls import reverse
 
 client = Client()
 

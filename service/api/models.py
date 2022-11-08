@@ -1,23 +1,6 @@
-from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-
-
-class UserManager(BaseUserManager):
-    """
-    Custom user model manager where email is the unique identifiers
-    for authentication instead of usernames.
-    """
-
-    def create_user(self, email, password, **extrs_fields):
-        if not email:
-            raise ValueError(_("The email must be set"))
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extrs_fields)
-        user.set_password(password)
-        user.save()
-        return user
 
 
 class User(AbstractBaseUser):
@@ -32,14 +15,11 @@ class User(AbstractBaseUser):
     street_number = models.CharField(max_length=16)
     zip = models.CharField(max_length=15)
     is_company = models.BooleanField(default=False)
-    license_until = models.DateTimeField()
-    is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)
+    license_until = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
 
-    objects = UserManager()
     USERNAME_FIELD = "email"
 
 
