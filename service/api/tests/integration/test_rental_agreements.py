@@ -1,12 +1,11 @@
 from datetime import datetime
 
-from rest_framework import status
+from django.test import Client, TestCase
 from django.urls import reverse
-from django.test import TestCase, Client
+from rest_framework import status
+
 from api.models import RentalAgreement, User
-from api.serializers import (
-    RentalAgreementSerializer,
-)
+from api.serializers import RentalAgreementSerializer
 
 client = Client()
 
@@ -81,7 +80,7 @@ class RentalAgreementTest(TestCase):
         )
         response = client.get(reverse("rental_agreement"))
         rental_agreement = RentalAgreement.objects.all()
-        RentalAgreementSerializer(rental_agreement, many=True)
+        RentalAgreementSerializer().dump(rental_agreement, many=True)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_one_apartment(self):
@@ -95,8 +94,8 @@ class RentalAgreementTest(TestCase):
             reverse("rental_agreement_details", kwargs={"pk": rental_agreement_id})
         )
         rental_agreement = RentalAgreement.objects.get(id=rental_agreement_id)
-        serializer = RentalAgreementSerializer(rental_agreement)
-        self.assertEqual(response.json(), serializer.data)
+        serialized_data = RentalAgreementSerializer().dump(rental_agreement)
+        self.assertEqual(response.json(), serialized_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_update_apartment(self):
@@ -107,15 +106,17 @@ class RentalAgreementTest(TestCase):
         )
         rental_agreement = response.json()
         rental_agreement_id = rental_agreement.pop("id")
-        rental_agreement["end_at"] = "2022-11-11 05:31:20.007786+01"
+        rental_agreement["is_renewable"] = False
         response = client.put(
             reverse("rental_agreement_details", kwargs={"pk": rental_agreement_id}),
             data=rental_agreement,
             content_type="application/json",
         )
         rental_agreement = RentalAgreement.objects.get(id=rental_agreement_id)
-        serializer = RentalAgreementSerializer(rental_agreement, only=("end_at",))
-        self.assertEqual(response.json()["end_at"], serializer.data["end_at"])
+        serialized_data = RentalAgreementSerializer().dump(rental_agreement)
+        self.assertEqual(
+            response.json()["is_renewable"], serialized_data["is_renewable"]
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_delete_apartment(self):

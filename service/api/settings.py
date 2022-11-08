@@ -27,7 +27,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "corsheaders",
-    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -77,8 +76,29 @@ DATABASES = {
         "PASSWORD": "password",
         "HOST": "db",
         "PORT": 5432,
-        "TEST": {"NAME": "test_database"},
     }
+}
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": "general.log",
+        },
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "": {
+            "handlers": ["file", "console"],
+            "level": "INFO",
+        },
+    },
 }
 
 
@@ -101,13 +121,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-DATABASE_NAME = "database"
-
-DATABASE_PRE_SYNCDB = (
-    "CREATE DATABASE IF NOT EXISTS %s" % DATABASE_NAME,
-    "SET storage_engine=INNODB",
-)
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -120,10 +133,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-DEFAULT_PERMISSION_CLASSES = [
-    "rest_framework.permissions.AllowAny",
-]
 
 
 # Static files (CSS, JavaScript, Images)

@@ -1,8 +1,9 @@
 from datetime import datetime
 
-from rest_framework import status
+from django.test import Client, TestCase
 from django.urls import reverse
-from django.test import TestCase, Client
+from rest_framework import status
+
 from api.models import Building, User
 from api.serializers import BuildingSerializer
 
@@ -43,8 +44,8 @@ class BuildingTest(TestCase):
         )
         response = client.get(reverse("building"))
         buildings = Building.objects.all()
-        serializer = BuildingSerializer(buildings, many=True)
-        self.assertEqual(response.json(), serializer.data)
+        serialized_data = BuildingSerializer().dump(buildings, many=True)
+        self.assertEqual(response.json(), serialized_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_one_building(self):
@@ -54,8 +55,8 @@ class BuildingTest(TestCase):
         building_id = response.json()["id"]
         response = client.get(reverse("building_details", kwargs={"pk": building_id}))
         building = Building.objects.get(id=building_id)
-        serializer = BuildingSerializer(building)
-        self.assertEqual(response.json(), serializer.data)
+        serialized_data = BuildingSerializer().dump(building)
+        self.assertEqual(response.json(), serialized_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_update_building(self):
@@ -71,9 +72,9 @@ class BuildingTest(TestCase):
             content_type="application/json",
         )
         building = Building.objects.get(id=building_id)
-        serializer = BuildingSerializer(building, only=("name",))
+        serialized_data = BuildingSerializer().dump(building)
 
-        self.assertEqual(response.json()["name"], serializer.data["name"])
+        self.assertEqual(response.json()["name"], serialized_data["name"])
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_delete_building(self):
