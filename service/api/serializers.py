@@ -1,4 +1,4 @@
-from rest_marshmallow import Schema, fields
+from marshmallow import Schema, fields
 
 
 class BuildingSerializer(Schema):
@@ -8,7 +8,7 @@ class BuildingSerializer(Schema):
     association_name = fields.String()
     city = fields.String()
     street = fields.String()
-    street_number = fields.String(max_length=16)
+    street_number = fields.String()
 
 
 class ApartmentSerializer(Schema):

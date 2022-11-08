@@ -1,8 +1,9 @@
 from datetime import datetime
 
-from rest_framework import status
+from django.test import Client, TestCase
 from django.urls import reverse
-from django.test import TestCase, Client
+from rest_framework import status
+
 from api.models import Apartment, User
 from api.serializers import ApartmentSerializer
 
@@ -58,7 +59,7 @@ class ApartmentTest(TestCase):
         )
         response = client.get(reverse("apartment"))
         apartments = Apartment.objects.all()
-        ApartmentSerializer(apartments, many=True)
+        ApartmentSerializer().dump(apartments, many=True)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_get_one_apartment(self):
@@ -68,8 +69,8 @@ class ApartmentTest(TestCase):
         aprtment_id = response.json()["id"]
         response = client.get(reverse("apartment_details", kwargs={"pk": aprtment_id}))
         aprtment = Apartment.objects.get(id=aprtment_id)
-        serializer = ApartmentSerializer(aprtment)
-        self.assertEqual(response.json(), serializer.data)
+        serialized_data = ApartmentSerializer().dump(aprtment)
+        self.assertEqual(response.json(), serialized_data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_update_apartment(self):
@@ -85,8 +86,8 @@ class ApartmentTest(TestCase):
             content_type="application/json",
         )
         apartment = Apartment.objects.get(id=apartment_id)
-        serializer = ApartmentSerializer(apartment, only=("rooms",))
-        self.assertEqual(response.json()["rooms"], serializer.data["rooms"])
+        serialized_data = ApartmentSerializer().dump(apartment)
+        self.assertEqual(response.json()["rooms"], serialized_data["rooms"])
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_delete_apartment(self):

@@ -1,6 +1,6 @@
 import uuid
 
-from rest_marshmallow import Schema, fields
+from marshmallow import Schema, fields
 
 
 class ApartmentBase(Schema):
@@ -39,12 +39,6 @@ class BuildingBase(Schema):
 
 class CreateBuilding(BuildingBase):
     id = fields.Method("generate_uuid")
-    name = fields.String()
-    number = fields.Int()
-    association_name = fields.String()
-    city = fields.String()
-    street = fields.String()
-    street_number = fields.String(max_length=16)
 
     def generate_uuid(self, data):
         return str(uuid.uuid4())
